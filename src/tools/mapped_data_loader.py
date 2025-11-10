@@ -59,9 +59,36 @@ class MappedDataLoader:
             logger.info(f"从缓存中加载数据: {file_name} -> {actual_file_name}")
             return self.data_cache[file_name]
         
+        # 检查文件是否存在
         if not file_path.exists():
             logger.error(f"数据文件不存在: {file_path}")
-            raise FileNotFoundError(f"数据文件不存在: {file_path}")
+            
+            # 尝试在备选位置查找文件
+            alternative_paths = [
+                Path("../data") / actual_file_name,  # 上级目录的data文件夹
+                Path("../../数据") / actual_file_name,  # 上上级目录的"数据"文件夹
+                Path("data") / actual_file_name,  # 当前目录的data文件夹
+            ]
+            
+            found_path = None
+            for alt_path in alternative_paths:
+                if alt_path.exists():
+                    found_path = alt_path
+                    logger.info(f"在备选位置找到文件: {alt_path}")
+                    break
+            
+            if found_path:
+                file_path = found_path
+            else:
+                # 提供更详细的错误信息
+                error_msg = f"数据文件不存在: {file_path}\n"
+                error_msg += f"已尝试的备选位置:\n"
+                for alt_path in alternative_paths:
+                    error_msg += f"  - {alt_path}\n"
+                error_msg += f"\n请确保数据文件已正确放置，或检查DATA_ROOT_PATH配置。\n"
+                error_msg += f"当前DATA_ROOT_PATH配置为: {self.data_root_path}"
+                
+                raise FileNotFoundError(error_msg)
         
         try:
             if file_name.endswith('.csv') or actual_file_name.endswith('.csv'):
