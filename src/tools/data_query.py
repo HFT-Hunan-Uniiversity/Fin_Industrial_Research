@@ -21,18 +21,15 @@ class DataQuery:
             data_dir: 数据目录路径或数据加载器实例
         """
         # 检查是否是数据加载器实例
-        if hasattr(data_dir, 'data_root_path'):
-            # 这是一个数据加载器实例
+        if hasattr(data_dir, 'data_root_path') and hasattr(data_dir, 'load_data'):
+            # 这是一个MappedDataLoader实例
             self.data_loader = data_dir
             self.data_dir = data_dir.data_root_path
         else:
-            # 这是一个路径字符串
-            self.data_dir = data_dir
-            self.data_loader = None
-        
-        if not os.path.exists(self.data_dir):
-            os.makedirs(self.data_dir)
-            logger.warning(f"数据目录 {self.data_dir} 不存在，已创建")
+            # 这是一个路径字符串，创建MappedDataLoader实例
+            from .mapped_data_loader import MappedDataLoader
+            self.data_loader = MappedDataLoader(data_root_path=data_dir)
+            self.data_dir = self.data_loader.data_root_path
     
     def get_data_summary(self, file_name: str) -> Dict[str, Any]:
         """
@@ -44,19 +41,9 @@ class DataQuery:
         Returns:
             数据摘要字典
         """
-        file_path = os.path.join(self.data_dir, file_name)
-        
-        if not os.path.exists(file_path):
-            logger.warning(f"数据文件 {file_path} 不存在")
-            return {
-                "status": "error",
-                "error": f"数据文件 {file_path} 不存在",
-                "summary": ""
-            }
-        
         try:
-            # 读取CSV文件
-            df = pd.read_csv(file_path)
+            # 使用MappedDataLoader加载数据
+            df = self.data_loader.load_data(file_name)
             
             # 生成摘要
             summary = f"""
@@ -82,7 +69,7 @@ class DataQuery:
             }
             
         except Exception as e:
-            logger.error(f"读取数据文件 {file_path} 失败: {str(e)}")
+            logger.error(f"读取数据文件 {file_name} 失败: {str(e)}")
             return {
                 "status": "error",
                 "error": f"读取数据文件失败: {str(e)}",
@@ -97,8 +84,9 @@ class DataQuery:
             可用数据文件列表
         """
         try:
-            files = [f for f in os.listdir(self.data_dir) if f.endswith('.csv')]
-            return files
+            # 使用MappedDataLoader的list_available_files方法
+            available_files = self.data_loader.list_available_files()
+            return available_files.get("actual_files", [])
         except Exception as e:
             logger.error(f"列出数据文件失败: {str(e)}")
             return []
@@ -113,4 +101,5 @@ class DataQuery:
         Returns:
             数据文件的完整路径
         """
-        return os.path.join(self.data_dir, file_name)
+        # 使用MappedDataLoader的get_file_path方法
+        return self.data_loader.get_file_path(file_name)

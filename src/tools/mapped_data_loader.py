@@ -195,11 +195,11 @@ class DataQuery:
         """
         if isinstance(data_loader, MappedDataLoader):
             self.data_loader = data_loader
+            self.data_dir = data_loader.data_root_path
         else:
             # 向后兼容，创建MappedDataLoader实例
             self.data_loader = MappedDataLoader(data_root_path=data_dir)
-        
-        self.data_dir = data_loader.data_root_path if hasattr(data_loader, 'data_root_path') else data_dir
+            self.data_dir = self.data_loader.data_root_path
     
     def query_data(self, file_name: str, filters: Optional[Dict] = None, 
                    columns: Optional[List[str]] = None, 
