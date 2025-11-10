@@ -24,12 +24,16 @@ agents:
     inputs: ["2新能源汽车分厂商产销(207家厂商，201812-202210月度数据).csv", "充电设施数量.csv"]
     outputs: ["market_trend_summary", "penetration_rate"]
 
-  - name: PolicyAgent
-    description: "结合宏观与行业数据，评估政策与市场信号的影响。"
+  - name: PolicyNewsAgent
+    description: "实时搜索最新的政策和新闻信息，为行业分析提供最新动态。"
     model: ${main_llm}
-    tools: ["query_data", "analyze_correlation"]
-    inputs: ["gdp数据.csv", "新能源行业数据（2000-2023年）.csv"]
-    outputs: ["policy_insight", "impact_analysis"]
+    tools: ["web_search"]
+    inputs: []
+    outputs: ["policy_news_summary", "key_policy_changes", "market_impact"]
+    output_schema:
+      policy_news_summary: "string"
+      key_policy_changes: "list"
+      market_impact: "string"
 
   - name: ForecastAgent
     description: "根据历史趋势预测下一期市场走势。"
@@ -42,5 +46,5 @@ agents:
     description: "整合所有子智能体的输出，生成最终Markdown报告。"
     model: ${main_llm}
     tools: ["generate_report"]
-    inputs_from_agents: ["MacroAgent", "FinanceAgent", "MarketAgent", "PolicyAgent", "ForecastAgent"]
+    inputs_from_agents: ["MacroAgent", "FinanceAgent", "MarketAgent", "PolicyNewsAgent", "ForecastAgent"]
     output_format: "markdown"

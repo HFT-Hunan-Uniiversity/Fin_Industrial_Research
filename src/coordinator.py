@@ -4,7 +4,7 @@ from typing import Dict, List, Any, Optional
 from datetime import datetime
 from pathlib import Path
 
-from src.agents import MacroAgent, FinanceAgent, MarketAgent, PolicyAgent, ForecastAgent, ReportAgent
+from src.agents import MacroAgent, FinanceAgent, MarketAgent, ForecastAgent, ReportAgent, PolicyNewsAgent
 from src.tools import MappedDataLoader, DataQuery, DataAnalyzer, ChartGenerator
 from src.utils import (
     load_config, 
@@ -81,19 +81,18 @@ class AnalysisCoordinator:
                 data_query=self.data_query,
                 data_analyzer=self.data_analyzer
             ),
-            "PolicyAgent": PolicyAgent(
+            "PolicyNewsAgent": PolicyNewsAgent(
                 model_name=model_name,
                 api_key=self.env_vars.get("SILICONFLOW_API_KEY"),
-                data_query=self.data_query,
-                data_analyzer=self.data_analyzer
+                dashscope_api_key=self.env_vars.get("DASHSCOPE_API_KEY")
             ),
             "ForecastAgent": ForecastAgent(
-                llm=llm,
-                tools=["data_query", "data_analyzer"]
+                model_name=model_name,
+                api_key=self.env_vars.get("SILICONFLOW_API_KEY")
             ),
             "ReportAgent": ReportAgent(
-                llm=llm,
-                tools=["data_query", "data_analyzer"]
+                model_name=model_name,
+                api_key=self.env_vars.get("SILICONFLOW_API_KEY")
             )
         }
         
@@ -164,7 +163,7 @@ class AnalysisCoordinator:
             # 默认运行所有智能体，除了报告智能体
             agents_to_run = [
                 "MacroAgent", "FinanceAgent", "MarketAgent", 
-                "PolicyAgent", "ForecastAgent"
+                "PolicyNewsAgent", "ForecastAgent"
             ]
         else:
             # 根据重点领域选择智能体
@@ -172,7 +171,7 @@ class AnalysisCoordinator:
                 "宏观经济": "MacroAgent",
                 "财务": "FinanceAgent",
                 "市场": "MarketAgent",
-                "政策": "PolicyAgent",
+                "政策新闻": "PolicyNewsAgent",
                 "预测": "ForecastAgent"
             }
             
@@ -342,7 +341,7 @@ class AnalysisCoordinator:
                     "MacroAgent": "宏观经济环境",
                     "FinanceAgent": "行业财务表现",
                     "MarketAgent": "市场产销趋势",
-                    "PolicyAgent": "政策与环境影响",
+                    "PolicyNewsAgent": "实时政策新闻",
                     "ForecastAgent": "预测与展望"
                 }.get(agent_name, agent_name)
                 
@@ -357,3 +356,129 @@ class AnalysisCoordinator:
             summary += self.analysis_results["ReportAgent"]["summary"]
         
         return summary
+    
+    def get_agent_outputs(self) -> Dict[str, Any]:
+        """
+        获取每个智能体的输出内容和数据源信息
+        
+        Returns:
+            包含每个智能体输出内容和数据源信息的字典
+        """
+        if not self.analysis_results:
+            return {"status": "error", "message": "尚未运行分析"}
+        
+        outputs = {}
+        
+        # 宏观经济分析Agent
+        if "MacroAgent" in self.analysis_results:
+            macro_result = self.analysis_results["MacroAgent"]
+            outputs["MacroAgent"] = {
+                "data_source": "宏观数据文件夹",
+                "data_files": [
+                    self.data_loader._resolve_file_name("macro_economic_data"),
+                    self.data_loader._resolve_file_name("cpi_data"),
+                    self.data_loader._resolve_file_name("ppi_data")
+                ],
+                "output_content": macro_result,
+                "key_fields": ["macro_summary", "macro_corr_matrix", "key_insights", "recommendations"]
+            }
+        
+        # 财务分析Agent
+        if "FinanceAgent" in self.analysis_results:
+            finance_result = self.analysis_results["FinanceAgent"]
+            outputs["FinanceAgent"] = {
+                "data_source": "财务数据文件夹",
+                "data_files": [
+                    self.data_loader._resolve_file_name("industry_overview"),
+                    self.data_loader._resolve_file_name("company_financial_summary"),
+                    self.data_loader._resolve_file_name("company_profitability"),
+                    self.data_loader._resolve_file_name("company_rd_investment")
+                ],
+                "output_content": finance_result,
+                "key_fields": ["finance_summary", "key_metrics", "company_comparison", "investment_insights", "rd_analysis", "risk_factors"]
+            }
+        
+        # 市场分析Agent
+        if "MarketAgent" in self.analysis_results:
+            market_result = self.analysis_results["MarketAgent"]
+            outputs["MarketAgent"] = {
+                "data_source": "市场数据文件夹",
+                "data_files": [
+                    self.data_loader._resolve_file_name("production_sales_data"),
+                    self.data_loader._resolve_file_name("charging_infrastructure"),
+                    self.data_loader._resolve_file_name("brand_production_sales")
+                ],
+                "output_content": market_result,
+                "key_fields": ["market_trend_summary", "penetration_rate", "manufacturer_analysis", "brand_comparison", "infrastructure_insights", "market_forecast"]
+            }
+        
+        # 政策新闻Agent
+        if "PolicyNewsAgent" in self.analysis_results:
+            policy_result = self.analysis_results["PolicyNewsAgent"]
+            outputs["PolicyNewsAgent"] = {
+                "data_source": "在线新闻API",
+                "data_files": ["无固定数据文件，通过API获取实时新闻"],
+                "output_content": policy_result,
+                "key_fields": ["news_summary", "policy_impacts", "industry_insights"]
+            }
+        
+        # 预测Agent
+        if "ForecastAgent" in self.analysis_results:
+            forecast_result = self.analysis_results["ForecastAgent"]
+            outputs["ForecastAgent"] = {
+                "data_source": "综合数据",
+                "data_files": ["基于其他Agent的分析结果"],
+                "output_content": forecast_result,
+                "key_fields": ["market_forecast", "growth_predictions", "risk_assessment"]
+            }
+        
+        # 报告Agent
+        if "ReportAgent" in self.analysis_results:
+            report_result = self.analysis_results["ReportAgent"]
+            outputs["ReportAgent"] = {
+                "data_source": "其他Agent的分析结果",
+                "data_files": ["基于其他Agent的分析结果"],
+                "output_content": report_result,
+                "key_fields": ["report_content", "summary", "recommendations"]
+            }
+        
+        return outputs
+    
+    def print_agent_outputs(self):
+        """
+        打印每个智能体的输出内容和数据源信息
+        """
+        outputs = self.get_agent_outputs()
+        
+        print("=" * 80)
+        print("智能体输出内容和数据源信息")
+        print("=" * 80)
+        
+        for agent_name, info in outputs.items():
+            print(f"\n【{agent_name}】")
+            print(f"数据源: {info['data_source']}")
+            print(f"数据文件: {', '.join(info['data_files'])}")
+            
+            print("\n主要输出字段:")
+            for field in info['key_fields']:
+                print(f"  - {field}")
+            
+            print("\n输出内容摘要:")
+            content = info['output_content']
+            if isinstance(content, dict):
+                for field in info['key_fields']:
+                    if field in content and content[field]:
+                        if isinstance(content[field], str):
+                            print(f"  {field}: {content[field][:100]}..." if len(content[field]) > 100 else f"  {field}: {content[field]}")
+                        elif isinstance(content[field], list):
+                            print(f"  {field}: {len(content[field])} 项")
+                        elif isinstance(content[field], dict):
+                            print(f"  {field}: {len(content[field])} 个键值对")
+                        else:
+                            print(f"  {field}: {type(content[field]).__name__}")
+            else:
+                print(f"  {str(content)[:100]}..." if len(str(content)) > 100 else f"  {str(content)}")
+            
+            print("-" * 60)
+        
+        print("\n" + "=" * 80)

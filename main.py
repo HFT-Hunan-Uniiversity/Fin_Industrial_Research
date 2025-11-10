@@ -65,6 +65,11 @@ def main():
         action="store_true",
         help="不生成图表"
     )
+    parser.add_argument(
+        "--show-agent-outputs", 
+        action="store_true",
+        help="显示每个智能体的详细输出内容和数据源信息"
+    )
     
     args = parser.parse_args()
     
@@ -136,6 +141,13 @@ def main():
         print(summary)
     except Exception as e:
         logger.error(f"获取分析摘要失败: {str(e)}")
+    
+    # 显示每个智能体的详细输出内容和数据源信息
+    if args.show_agent_outputs:
+        try:
+            coordinator.print_agent_outputs()
+        except Exception as e:
+            logger.error(f"显示智能体输出失败: {str(e)}")
     
     print("\n分析完成!")
 

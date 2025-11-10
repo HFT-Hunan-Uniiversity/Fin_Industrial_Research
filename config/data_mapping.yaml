@@ -90,16 +90,16 @@ company_rd_investment:
 
 # 市场数据
 production_sales_data:
-  actual_file: "2新能源汽车分厂商产销(207家厂商，201812-202210月度数据).csv"
+  actual_file: "新能源汽车分厂商产销数据.csv"
   description: "新能源汽车分厂商产销数据"
 
 brand_production_sales:
-  actual_file: "副本1汽车分品牌产销(95家车企，768个车型，201512-202210月度数据).csv"
+  actual_file: "汽车分品牌产销数据.csv"
   description: "汽车分品牌产销数据"
 
 # 基础设施数据
 charging_infrastructure:
-  actual_file: "10国内充电设施数量（省份，月，201602-202302）.csv"
+  actual_file: "充电设施数量.csv"
   description: "国内充电设施数据"
 
 # 其他数据

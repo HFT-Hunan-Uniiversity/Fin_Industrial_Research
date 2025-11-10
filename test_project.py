@@ -15,7 +15,7 @@ project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
 from src.tools import DataLoader, DataQuery, DataAnalyzer, ChartGenerator
-from src.agents import MacroAgent, FinanceAgent, MarketAgent, PolicyAgent, ForecastAgent, ReportAgent
+from src.agents import MacroAgent, FinanceAgent, MarketAgent, ForecastAgent, ReportAgent
 from src.coordinator import AnalysisCoordinator
 from src.utils import load_config, load_env_variables, format_summary, extract_key_insights
 
