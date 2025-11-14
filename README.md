@@ -1,4 +1,4 @@
-# 新能源汽车行业分析系统
+# 行业深度研究Agent-Industrial Deep research Agent
 
 基于LangChain框架和硅基流动模型的多智能体系统，自动完成新能源汽车行业的多维数据分析、趋势判断和报告生成。
 
