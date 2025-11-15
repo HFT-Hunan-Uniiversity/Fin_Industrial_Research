@@ -1,10 +1,12 @@
-# 新能源汽车行业分析系统
+# 行业分析系统
 
-基于LangChain框架和硅基流动模型的多智能体系统，自动完成新能源汽车行业的多维数据分析、趋势判断和报告生成。
+基于LangChain框架和硅基流动模型的多智能体系统，自动完成各行业的多维数据分析、趋势判断和报告生成。
 
 ## 项目概述
 
-本项目是一个完整的新能源汽车行业分析解决方案，包含后端智能分析系统和前端展示界面。后端采用多智能体架构，能够从宏观经济、财务指标、市场趋势、政策环境等多个维度进行综合分析；前端提供友好的用户界面，支持行业选择、问题输入、分析过程展示和报告查看下载等功能。
+本项目是一个完整的行业分析解决方案，包含后端智能分析系统和前端展示界面。后端采用多智能体架构，能够从宏观经济、财务指标、市场趋势、政策环境等多个维度进行综合分析；前端提供友好的用户界面，支持行业选择、问题输入、分析过程展示和报告查看下载等功能。
+
+**注意**：当前演示版本以新能源汽车行业为例，但系统设计为通用型，可适用于各类行业的深度分析。
 
 ## 项目结构
 
@@ -112,11 +114,11 @@ deploy-docker.bat
 
 ```bash
 # Linux/Mac
-chmod +x install.sh
-./install.sh
+chmod +x scripts/install.sh
+./scripts/install.sh
 
 # Windows
-install.bat
+scripts/install.bat
 ```
 
 ## 使用方法
@@ -171,10 +173,10 @@ http://localhost:8081
 ### Docker部署
 ```bash
 # 构建镜像
-docker build -t new-energy-analysis:latest .
+docker build -t industry-analysis:latest .
 
 # 运行容器
-docker run -p 8081:8081 new-energy-analysis:latest
+docker run -p 8081:8081 industry-analysis:latest
 ```
 
 ### 云服务器部署
@@ -184,10 +186,12 @@ docker run -p 8081:8081 new-energy-analysis:latest
 
 系统使用的数据包括：
 - 宏观经济数据（GDP、CPI）
-- 新能源汽车行业上市公司财务数据
-- 新能源汽车产销数据
-- 充电设施数据
+- 行业上市公司财务数据
+- 行业产销数据
+- 相关设施数据
 - 政策文件数据
+
+**注意**：当前演示版本使用新能源汽车行业数据，但系统可处理各行业数据。
 
 ## 输出结果
 
