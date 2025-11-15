@@ -1,69 +1,37 @@
-# 行业分析系统
+# 新能源汽车行业分析系统
 
-基于LangChain框架和硅基流动模型的多智能体系统，自动完成各行业的多维数据分析、趋势判断和报告生成。
-
-## 项目概述
-
-本项目是一个完整的行业分析解决方案，包含后端智能分析系统和前端展示界面。后端采用多智能体架构，能够从宏观经济、财务指标、市场趋势、政策环境等多个维度进行综合分析；前端提供友好的用户界面，支持行业选择、问题输入、分析过程展示和报告查看下载等功能。
-
-**注意**：当前演示版本以新能源汽车行业为例，但系统设计为通用型，可适用于各类行业的深度分析。
+基于LangChain框架和硅基流动模型的多智能体系统，自动完成新能源汽车行业的多维数据分析、趋势判断和报告生成。
 
 ## 项目结构
 
 ```
-Industry_analysis/
-├── agent_analysis_project/    # 后端智能分析系统
-│   ├── config/               # 配置文件
-│   │   ├── project.yaml     # 项目配置
-│   │   ├── agent.yaml       # 智能体配置
-│   │   └── prompt.yaml      # 提示词配置
-│   ├── src/                  # 源代码
-│   │   ├── agents/          # 智能体实现
-│   │   ├── tools/           # 工具实现
-│   │   └── utils/           # 工具函数
-│   ├── data/                # 数据文件
-│   ├── output/              # 输出结果
-│   ├── logs/                # 日志文件
-│   ├── requirements.txt     # 依赖包
-│   ├── .env                 # 环境变量
-│   └── api_server.py        # API服务器
-├── web/                      # 前端展示界面
-│   ├── index.html           # 主页面
-│   ├── report.html          # 报告页面
-│   └── server/              # Node.js后端服务
-└── output/                   # 分析结果输出
+agent_analysis_project/
+├── config/                 # 配置文件
+│   ├── project.yaml       # 项目配置
+│   ├── agent.yaml         # 智能体配置
+│   └── prompt.yaml        # 提示词配置
+├── src/                   # 源代码
+│   ├── agents/            # 智能体实现
+│   ├── tools/             # 工具实现
+│   └── utils/             # 工具函数
+├── data/                  # 数据文件
+├── output/                # 输出结果
+├── logs/                  # 日志文件
+├── requirements.txt       # 依赖包
+├── .env                   # 环境变量
+└── README.md             # 项目说明
 ```
-
-## 功能特点
-
-### 后端智能分析系统
-- **多智能体架构**：包含宏观经济、财务、市场、政策和预测等多个专业智能体
-- **自动数据分析**：支持多种数据格式的自动处理和分析
-- **报告生成**：自动生成结构化的行业分析报告
-- **API接口**：提供RESTful API供前端调用
-
-### 前端展示界面
-- **行业选择**：支持多个行业的分析选择
-- **问题输入**：支持自定义分析问题
-- **实时进度**：展示分析过程的实时进度
-- **报告展示**：美观的报告展示界面
-- **下载分享**：支持报告的下载和分享功能
 
 ## 安装与配置
 
-### 环境要求
-- Python 3.8+
-- Node.js 14+
-- 硅基流动API密钥
+### 方式一：本地安装
 
-### 后端安装
-
-1. 进入后端目录
+1. 克隆项目并进入目录
 ```bash
 cd agent_analysis_project
 ```
 
-2. 安装Python依赖
+2. 安装依赖
 ```bash
 pip install -r requirements.txt
 ```
@@ -77,19 +45,7 @@ cp .env.template .env
 nano .env
 ```
 
-### 前端安装
-
-1. 进入前端目录
-```bash
-cd web
-```
-
-2. 启动Node.js服务器
-```bash
-node server/server.js
-```
-
-### Docker部署
+### 方式二：Docker部署
 
 1. 配置环境变量
 ```bash
@@ -110,88 +66,54 @@ chmod +x deploy-docker.sh
 deploy-docker.bat
 ```
 
-### 一键安装脚本
+详细部署说明请参考 [Docker部署指南](docs/DOCKER_DEPLOYMENT.md)
+
+### 方式三：一键安装脚本
 
 ```bash
 # Linux/Mac
-chmod +x scripts/install.sh
-./scripts/install.sh
+chmod +x install.sh
+./install.sh
 
 # Windows
-scripts/install.bat
+install.bat
 ```
 
 ## 使用方法
 
-### 本地运行
-
-1. 启动后端API服务
+1. 运行完整分析
 ```bash
-cd agent_analysis_project
-python api_server.py
+python main.py
 ```
 
-2. 启动前端服务
+2. 运行测试套件
 ```bash
-cd web
-node server/server.js
+python test_project.py
 ```
 
-3. 访问前端界面
-```
-http://localhost:8081
-```
-
-### 使用流程
-
-1. 在主页面选择要分析的行业
-2. 输入想要分析的问题或需求
-3. 系统将自动进行多维度分析
-4. 查看分析进度和结果
-5. 在报告页面查看完整分析报告
-6. 可以下载或分享报告
-
-## 技术架构
-
-### 后端技术栈
-- **框架**：LangChain
-- **模型**：硅基流动API (deepseek-ai/DeepSeek-R1)
-- **数据处理**：pandas, numpy
-- **API框架**：FastAPI
-
-### 前端技术栈
-- **基础**：HTML5, CSS3, JavaScript
-- **样式**：现代响应式设计
-- **交互**：原生JavaScript，无外部依赖
-- **后端**：Node.js
-
-## 部署选项
-
-### 本地部署
-适合开发测试和个人使用，详见各子目录的README文件。
-
-### Docker部署
+3. 运行示例
 ```bash
-# 构建镜像
-docker build -t industry-analysis:latest .
-
-# 运行容器
-docker run -p 8081:8081 industry-analysis:latest
+python run_example.py
 ```
 
-### 云服务器部署
-适合生产环境，支持远程访问和团队协作。
+## 智能体说明
+
+- **MacroAgent**: 分析宏观经济数据与行业趋势关系
+- **FinanceAgent**: 分析行业财务指标
+- **MarketAgent**: 分析市场产销趋势和结构
+- **PolicyAgent**: 评估政策环境影响
+- **ForecastAgent**: 预测未来发展趋势
+- **ReportAgent**: 整合所有分析结果生成报告
 
 ## 数据说明
 
 系统使用的数据包括：
 - 宏观经济数据（GDP、CPI）
-- 行业上市公司财务数据
-- 行业产销数据
-- 相关设施数据
-- 政策文件数据
+- 新能源汽车行业上市公司财务数据
+- 新能源汽车产销数据
+- 充电设施数据
 
-**注意**：当前演示版本使用新能源汽车行业数据，但系统可处理各行业数据。
+详细数据说明请参考 `../数据说明.md`
 
 ## 输出结果
 
@@ -200,6 +122,14 @@ docker run -p 8081:8081 industry-analysis:latest
 - 综合分析报告（Markdown格式）
 - 数据可视化图表（PNG/HTML格式）
 
+## 技术架构
+
+- **框架**: LangChain
+- **模型**: 硅基流动API (deepseek-ai/DeepSeek-R1)
+- **数据处理**: pandas, numpy
+- **可视化**: matplotlib, plotly
+- **Web界面**: Streamlit
+
 ## 注意事项
 
 1. 确保数据文件路径正确
@@ -207,14 +137,71 @@ docker run -p 8081:8081 industry-analysis:latest
 3. 大规模分析可能需要较长时间
 4. 结果仅供参考，不构成投资建议
 
-## 贡献指南
+## 项目分享与部署
 
-欢迎提交Issue和Pull Request来改进项目。
+本项目支持多种分享和部署方式：
+
+### 分享方式
+
+1. **项目打包分享**
+   ```bash
+   # 使用打包脚本
+   python share_project.py
+   ```
+   将生成 `new-energy-analysis-package.zip` 文件，包含所有必要文件和说明。
+
+2. **Git仓库分享**
+   ```bash
+   git init
+   git add .
+   git commit -m "Initial commit"
+   git remote add origin <your-repo-url>
+   git push -u origin main
+   ```
+
+3. **Docker镜像分享**
+   ```bash
+   # 构建镜像
+   docker build -t new-energy-analysis:latest .
+   
+   # 推送到Docker Hub
+   docker tag new-energy-analysis:latest yourusername/new-energy-analysis:latest
+   docker push yourusername/new-energy-analysis:latest
+   ```
+
+### 部署选项
+
+1. **本地部署**
+   - 适合个人使用和开发测试
+   - 详见 [安装说明](docs/INSTALLATION.md)
+
+2. **Docker部署**
+   - 适合服务器部署和团队协作
+   - 详见 [Docker部署指南](docs/DOCKER_DEPLOYMENT.md)
+
+3. **云服务器部署**
+   - 适合生产环境和远程访问
+   - 详见 [Docker部署指南](docs/DOCKER_DEPLOYMENT.md#云服务器部署)
+
+### 示例数据
+
+项目包含示例数据，位于 `example_data/` 目录：
+- 宏观经济数据示例
+- 行业销售数据示例
+- 企业财务数据示例
+- 政策文件数据示例
+- 市场调研数据示例
+- 技术指标数据示例
+
+详细说明请参考 [示例数据说明](example_data/README.md)
+
+## 技术支持
+
+如需技术支持或遇到问题，请参考：
+- [安装说明](docs/INSTALLATION.md)
+- [Docker部署指南](docs/DOCKER_DEPLOYMENT.md)
+- [项目分享指南](docs/SHARING_GUIDE.md)
 
 ## 许可证
 
-本项目采用 MIT 许可证，详见 [LICENSE](agent_analysis_project/LICENSE) 文件。
-
-## 联系方式
-
-如有问题或建议，请通过Issue联系我们。
+本项目采用 MIT 许可证，详见 [LICENSE](LICENSE) 文件。

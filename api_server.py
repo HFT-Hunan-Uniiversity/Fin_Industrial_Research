@@ -26,14 +26,27 @@ from src.coordinator import AnalysisCoordinator
 # 创建FastAPI应用
 app = FastAPI(title="行业分析API", version="1.0.0")
 
-# 添加CORS中间件，允许前端跨域访问
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # 允许前端地址
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# 添加CORS中间件（基于环境变量配置）
+allowed_origins = os.getenv("ALLOWED_ORIGINS", "")
+allowed_origins_list = [o.strip() for o in allowed_origins.split(",") if o.strip()]
+
+if allowed_origins_list:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=allowed_origins_list,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"]
+    )
+else:
+    # 若未配置，允许所有来源但不携带凭证
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origin_regex=".*",
+        allow_credentials=False,
+        allow_methods=["*"],
+        allow_headers=["*"]
+    )
 
 # 全局变量，存储分析协调器实例
 coordinator = None

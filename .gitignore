@@ -1,3 +1,19 @@
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -128,23 +144,19 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# IDE files
-.idea/
-.vscode/
-*.swp
-*.swo
-*~
+# 项目特定文件
+output/
+logs/
+charts/
+*.png
+*.jpg
+*.jpeg
+*.pdf
+temp/
+tmp/
 
 # Environment files
+.env
 .env.local
 .env.development.local
 .env.test.local
@@ -152,6 +164,9 @@ Thumbs.db
 
 # Dependency directories
 node_modules/
+venv/
+env/
+ENV/
 *.venv
 
 # Build directories
@@ -159,14 +174,13 @@ dist/
 build/
 
 # Log files
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
 # Output directories
 output/
-logs/
-charts/
 
 # Temporary files
 temp/
@@ -177,8 +191,31 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 
-# 项目特定文件
-*.png
-*.jpg
-*.jpeg
-*.pdf
+# OS cache
+$RECYCLE.BIN/
+
+# Windows thumbnail cache
+Thumbs.db
+
+# macOS cache
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Python bytecode
+*.py[cod]
+
+# 数据文件
+*.csv
+*.xlsx
+*.xls
+*.json
+*.xml
+!config/*.json
+!config/*.yaml
+!config/*.yml
+
+# API密钥和敏感信息
+secrets/
+credentials/
+api_keys.txt

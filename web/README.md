@@ -1,48 +1,37 @@
-# 前端展示系统
+# FinTech Industry Research Frontend + Backend
 
-本目录包含行业分析系统的前端展示界面，主要功能包括：
+## 本地运行
 
-- 首页展示
-- 行业分析报告查看
-- 报告下载与分享
-- 数据可视化展示
+### 前端
+1. 在项目根目录运行：
+   - `python3 -m http.server 8000`
+2. 打开 `http://localhost:8000/index.html#home`
 
-**注意**：当前演示版本以新能源汽车行业为例，但系统设计为通用型，可适用于各类行业的深度分析。
+### 后端（Node，无依赖）
+1. 在项目根目录运行：
+   - `node server/server.js`
+2. 服务监听 `http://localhost:8081`
 
-## 启动方式
+### 功能流程
+- 选择行业 → 输入问题 → 加载页分阶段显示 → 查看报告按钮 → 报告页输出并支持下载与分享
+- 与后端接口：`POST /api/report`、`GET /api/report/:id/stream`（SSE）、`GET /api/report/:id`
 
-```bash
-# 使用Python静态服务器
-python3 -m http.server 8000
-```
+## 部署到 GitHub
+1. 初始化并推送：
+   - `git init`
+   - `git add .`
+   - `git commit -m "feat: frontend + backend integration"`
+   - `git branch -M main`
+   - `git remote add origin <your_repo_url>`
+   - `git push -u origin main`
+2. 前端静态页面可用 GitHub Pages（Settings → Pages → Source 选择 `main` 分支 `/(root)`）。
+3. 后端需部署到你的服务器或云平台（保持接口路径一致），并将 `index.html` 中的 `API_BASE` 替换为生产域名。
 
-服务器启动后，可通过以下地址访问：
-- 首页：http://localhost:8000/index.html#home
-- 报告页：http://localhost:8000/report.html
+## 目录结构
+- `index.html`：多页路由（home/choose/ask/loading/ready）
+- `report.html`：报告输出页
+- `server/server.js`：后端示例服务（原生 Node http）
 
-## 文件结构
-
-- `index.html` - 系统首页（包含多页路由：home/choose/ask/loading/ready）
-- `report.html` - 报告展示页面
-- `server/` - 后端服务代码目录
-
-## 技术栈
-
-- HTML5
-- CSS3
-- JavaScript
-- Node.js
-
-## 与后端交互
-
-- 主要接口：`POST /api/report`、`GET /api/report/:id/stream`（SSE）、`GET /api/report/:id`
-- 在 `index.html` 脚本部分可配置 `API_BASE`（默认 `http://localhost:8081`）
-
-## 功能流程
-
-1. 选择行业
-2. 输入问题
-3. 加载页分阶段显示处理进度
-4. 点击查看报告按钮
-5. 报告页输出结果并支持下载与分享
+## 配置
+- 在 `index.html` 脚本部分设置 `API_BASE`（默认 `http://localhost:8081`）。
 

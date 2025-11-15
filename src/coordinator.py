@@ -247,6 +247,20 @@ class AnalysisCoordinator:
                 md_file = output_path / f"{agent_name}_report.md"
                 save_results(result, str(md_file), "markdown")
                 saved_files[f"{agent_name}_md"] = str(md_file)
+                # 生成PDF
+                try:
+                    from src.utils.pdf_export import markdown_to_pdf
+                    pdf_file = output_path / f"{agent_name}_report.pdf"
+                    # 收集已生成的PNG图表作为附录（若存在）
+                    charts_dir = output_path / "charts"
+                    image_paths = []
+                    if charts_dir.exists():
+                        for p in charts_dir.glob("*.png"):
+                            image_paths.append(str(p))
+                    markdown_to_pdf(result["report_content"], str(pdf_file), images=image_paths)
+                    saved_files[f"{agent_name}_pdf"] = str(pdf_file)
+                except Exception as e:
+                    logger.error(f"生成PDF失败: {str(e)}")
         
         # 保存综合摘要
         summary = create_report_summary(self.analysis_results)
@@ -275,6 +289,7 @@ class AnalysisCoordinator:
         output_path = create_output_directory(output_dir)
         charts_dir = output_path / "charts"
         charts_dir.mkdir(exist_ok=True)
+        engine = self.env_vars.get("CHART_ENGINE", "plotly").lower()
         
         # 生成图表
         chart_files = {}
@@ -287,7 +302,8 @@ class AnalysisCoordinator:
                 time_col="数据日期",
                 value_cols=["产量", "销量"],
                 title="新能源汽车产销趋势",
-                save_path=str(trend_chart)
+                save_path=str(trend_chart),
+                engine=engine
             )
             chart_files["trend"] = str(trend_chart)
             
@@ -296,7 +312,8 @@ class AnalysisCoordinator:
             self.chart_generator.generate_correlation_heatmap(
                 file_name="24汽车A股上市公司财务摘要（269家，10个指标，2006-2022）.csv",
                 title="汽车行业上市公司财务指标相关性",
-                save_path=str(corr_chart)
+                save_path=str(corr_chart),
+                engine=engine
             )
             chart_files["correlation"] = str(corr_chart)
             
@@ -306,7 +323,8 @@ class AnalysisCoordinator:
                 file_name="2新能源汽车分厂商产销(207家厂商，201812-202210月度数据).csv",
                 column="销量",
                 title="新能源汽车销量分布",
-                save_path=str(dist_chart)
+                save_path=str(dist_chart),
+                engine=engine
             )
             chart_files["distribution"] = str(dist_chart)
             

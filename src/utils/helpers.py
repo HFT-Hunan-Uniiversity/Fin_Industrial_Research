@@ -68,7 +68,8 @@ def save_results(results: Dict[str, Any], output_path: str, format: str = "json"
                 json.dump(results, f, ensure_ascii=False, indent=2)
         elif format.lower() == "markdown":
             with open(output_file, 'w', encoding='utf-8') as f:
-                f.write(results.get('content', str(results)))
+                md = results.get('report_content', results.get('content', str(results)))
+                f.write(md)
         else:
             raise ValueError(f"不支持的格式: {format}")
         
