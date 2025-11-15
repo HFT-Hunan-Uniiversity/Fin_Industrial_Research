@@ -1,0 +1,764 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>FinTech Industry Research</title>
+    <meta name="description" content="金融科技行业研究项目的前端主页" />
+    <style>
+      :root {
+        --bg: #000000;
+        --card: #0d0d0d;
+        --text: #ffffff;
+        --muted: #bdbdbd;
+        --accent: #f97316;
+        --accent-2: #06b6d4;
+        --border: #1f1f1f;
+        --surface: #111111;
+        --shadow: rgba(0,0,0,.45);
+        --radius-lg: 22px;
+        --radius-md: 14px;
+        --radius-sm: 10px;
+      }
+      @media (max-width: 900px) { .choose-grid { grid-template-columns: repeat(2, 1fr); } }
+      @media (max-width: 600px) { .choose-grid { grid-template-columns: 1fr; } }
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        background: var(--bg);
+        color: var(--text);
+      }
+      a { color: var(--accent-2); text-decoration: none; }
+      .container {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      header {
+        display: none;
+      }
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 14px 20px;
+      }
+      .brand { display: none; }
+      .links { display: flex; gap: 18px; }
+      .links a { color: var(--muted); font-size: 14px; padding: 8px 10px; border-radius: var(--radius-sm); }
+      .links a:hover { color: var(--text); }
+      .section-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+      .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+      .chip { background: var(--card); border: 1px solid var(--border); color: var(--muted); padding: 6px 10px; border-radius: 999px; font-size: 12px; }
+      .chip.active { color: var(--text); border-color: var(--accent-2); }
+      .industry-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+      .industry-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; cursor: pointer; transition: transform .16s ease, box-shadow .16s ease; }
+      .industry-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+      .industry-icon { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 8px; background: rgba(79, 70, 229, .14); }
+      .industry-name { margin-top: 10px; font-weight: 600; }
+      .industry-tags { margin-top: 6px; display: flex; gap: 6px; flex-wrap: wrap; }
+      .industry-tags span { background: rgba(6, 182, 212, .12); color: var(--muted); border: 1px solid var(--border); border-radius: 6px; font-size: 11px; padding: 3px 6px; }
+      .hero {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 24px;
+        padding: 40px 20px 16px;
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        box-shadow: 0 20px 40px var(--shadow);
+      }
+      .card .inner { padding: 20px; }
+      .title { font-size: 28px; font-weight: 800; margin: 0 0 8px 0; }
+      .subtitle { color: var(--muted); font-size: 15px; line-height: 1.6; }
+      .cta {
+        margin-top: 18px;
+        display: flex; gap: 12px; flex-wrap: wrap;
+      }
+      .btn { border: 1px solid var(--border); color: var(--text); background: var(--card); padding: 12px 16px; border-radius: 999px; cursor: pointer; box-shadow: 0 10px 24px var(--shadow); }
+      .btn.primary { background: var(--accent); border: none; }
+      .btn:hover { opacity: .92; }
+      .grid {
+        display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+        padding: 24px 20px 40px;
+      }
+      .metric { padding: 14px; }
+      .metric .label { color: var(--muted); font-size: 13px; }
+      .metric .value { font-size: 22px; font-weight: 700; margin-top: 6px; }
+      .section { padding: 8px 20px 28px; }
+      .section h2 { font-size: 18px; margin: 0 0 10px 0; }
+      .table { width: 100%; border-collapse: collapse; }
+      .table th, .table td { padding: 10px 12px; border-bottom: 1px solid var(--border); text-align: left; }
+      .table th { color: var(--muted); font-weight: 600; font-size: 13px; }
+      .table tr:hover td { background: rgba(79, 70, 229, 0.07); }
+      .filters { display: flex; gap: 12px; flex-wrap: wrap; margin: 8px 0 12px; }
+      .input, .select {
+        background: var(--card);
+        color: var(--text);
+        border: 1px solid var(--border);
+        padding: 8px 10px; border-radius: 8px; font-size: 14px;
+      }
+      footer { color: var(--muted); font-size: 12px; padding: 20px; border-top: 1px solid var(--border); }
+      @media (max-width: 900px) {
+        .hero { grid-template-columns: 1fr; }
+        .grid { grid-template-columns: 1fr 1fr; }
+        .industry-grid { grid-template-columns: 1fr 1fr; }
+      }
+      @media (max-width: 600px) {
+        .grid { grid-template-columns: 1fr; }
+        .industry-grid { grid-template-columns: 1fr; }
+      }
+      @media (max-width: 900px) { .choose-grid { grid-template-columns: repeat(3, 1fr); } }
+      @media (max-width: 600px) { .choose-grid { grid-template-columns: repeat(2, 1fr); } }
+
+      .view { display: none; min-height: calc(100vh - 80px); opacity: 0; transform: translateY(8px); will-change: opacity, transform; }
+      .view.active { display: block; opacity: 1; transform: translateY(0); transition: opacity .45s ease-in-out, transform .45s cubic-bezier(.2,.7,.2,1); }
+      .view.fade-out { display: block; opacity: 0; transform: translateY(-6px); transition: opacity .30s ease-in-out, transform .30s cubic-bezier(.2,.7,.2,1); }
+      .full { max-width: 980px; margin: 0 auto; padding: 40px 20px; }
+      .hero-left { max-width: 560px; }
+      .display-title { font-size: 56px; line-height: 1.08; font-weight: 800; margin: 0 0 16px; letter-spacing: .2px; }
+      .display-title .em { text-decoration: underline; text-decoration-thickness: 6px; text-underline-offset: 8px; }
+      .lead { color: var(--muted); font-size: 15px; line-height: 1.8; }
+      .btn.lg { padding: 12px 18px; border-radius: 999px; }
+      .btn.xl { padding: 20px 30px; font-size: 20px; border-radius: 999px; }
+      .topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 20px; }
+      .topbar .left { display: flex; align-items: center; gap: 8px; }
+      .link { color: var(--muted); font-size: 14px; }
+      .link:hover { color: var(--text); }
+      .page-title { text-align: center; font-size: 28px; font-weight: 700; margin: 10px 0 6px; }
+      .page-sub { text-align: center; color: var(--muted); }
+      .choose-wrap { max-width: 1100px; margin: 0; }
+      .choose-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 10px; justify-content: start; }
+      .choose-card { background: rgba(255,255,255,0.08); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 22px; display: flex; align-items: center; justify-content: center; text-align: center; cursor: pointer; box-shadow: 0 10px 22px var(--shadow); min-height: 112px; }
+      .choose-card:hover { border-color: var(--accent-2); transform: translateY(-2px); background: rgba(255,255,255,0.12); }
+      .choose-name { font-weight: 700; text-align: center; font-size: 22px; margin: 0; }
+      .text-gradient { background-image: linear-gradient(90deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; display: inline-block; }
+      .ask-wrap { max-width: 760px; margin: 40px auto; text-align: center; }
+      .ask-title { text-align: center; font-size: 26px; font-weight: 700; }
+      .ask-input { display: flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--border); padding: 10px 12px; border-radius: 999px; margin: 16px auto 0; box-shadow: 0 12px 28px var(--shadow); max-width: 680px; }
+      .ask-input input { flex: 1; background: transparent; border: none; outline: none; color: var(--text); font-size: 15px; padding: 8px; }
+      .ask-send { width: 40px; height: 40px; border-radius: 999px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); border: none; color: #fff; cursor: pointer; }
+      .suggests { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; justify-content: center; }
+      .suggests .chip { background: var(--card); border: 1px solid var(--border); color: var(--muted); padding: 8px 12px; border-radius: 999px; }
+      .view.loading .full { position: relative; display: grid; place-items: center; }
+      .view.loading .full, #view-ready .full { min-height: calc(100vh - 120px); padding-top: 40px; }
+      .particles { position: absolute; inset: 0; margin: auto; width: 70vmin; height: 70vmin; border-radius: 999px; box-shadow: 0 0 40px rgba(249,115,22,.18), 0 0 24px rgba(6,182,212,.12); background: radial-gradient(closest-side, rgba(249,115,22,.06), rgba(6,182,212,.05), transparent 75%); opacity: .22; transform: translateY(100px); pointer-events: none; }
+      .particles-orbit { width: 85vmin; height: 85vmin; opacity: .24; transform: translateY(100px); }
+      .loading-text { margin-top: 18px; font-size: 22px; font-weight: 700; text-shadow: 0 2px 6px rgba(0,0,0,.6); position: relative; z-index: 1; transition: opacity .3s ease; }
+      .view.loading .loading-text { transform: translateY(100px); }
+      #btn-ready-view { position: relative; z-index: 1; transform: translateY(100px); }
+      .report-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+      .actions { display: flex; gap: 8px; }
+      .btn.ghost { background: var(--card); border: 1px solid var(--border); }
+      .section-card { background: rgba(18,26,43,.6); border: 1px solid var(--border); border-radius: 16px; padding: 18px; margin-top: 14px; }
+      .section-card h3 { margin: 0 0 10px; font-size: 18px; }
+      .home-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 20px; }
+      .home-right { display: grid; place-items: center; }
+      .home-logo-svg { width: 380px; height: 380px; opacity: .22; mix-blend-mode: screen; }
+      #view-home .home-right { position: absolute; right: 6%; top: 50%; transform: translateY(-50%); z-index: 0; }
+      #view-home .home-logo-svg { width: clamp(540px, 62vmin, 820px); height: clamp(540px, 62vmin, 820px); opacity: .30; }
+      #view-home .hero-left { position: relative; z-index: 1; }
+      @media (max-width: 900px) { #view-home .home-right { position: static; transform: none; margin-top: 18px; } }
+      .strapline { font-size: 18px; letter-spacing: .8px; color: var(--muted); margin-bottom: 16px; font-weight: 600; }
+      .strapline strong { color: var(--text); }
+      #view-choose .full { position: relative; display: grid; place-items: center; min-height: calc(100vh - 120px); padding: 20px; }
+      #view-choose .page-title { margin: 0 0 2px; font-size: 56px; text-align: left; }
+      #view-choose .page-sub { margin: 0 0 10px; font-size: 22px; text-align: left; }
+      .choose-content { text-align: left; max-width: 900px; width: 100%; z-index: 1; display: flex; flex-direction: column; align-items: flex-start; }
+      #view-choose .home-right { position: absolute; right: 6%; top: 50%; transform: translateY(-50%); z-index: 0; }
+      #view-choose .home-logo-svg { width: clamp(520px, 58vmin, 760px); height: clamp(520px, 58vmin, 760px); opacity: .30; }
+      @media (max-width: 900px) { #view-choose .home-right { position: static; transform: none; margin-top: 16px; } }
+      #view-choose .choose-wrap { margin-top: 0; }
+      #view-choose .page-title { margin: 0 0 2px; }
+      #view-choose .page-sub { margin: 0 0 4px; }
+      #view-choose .choose-wrap { margin-top: 0; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="nav container">
+        <div class="brand">
+          <div class="logo" aria-hidden="true"></div>
+          <div>FinTech Industry Research</div>
+        </div>
+        <nav class="links">
+          <a href="index.html#home">主页</a>
+          <a href="index.html#choose">行业选择</a>
+          <a href="report.html">报告</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section id="view-home" class="view active">
+        <div class="topbar">
+          <div class="left"></div>
+          <div class="actions"><a href="index.html#home" class="link">回到主页</a></div>
+        </div>
+        <div class="full home-grid">
+          <div class="hero-left">
+            <div class="strapline"><strong>Industrial Deep Research Agent</strong> - 行业分析助手</div>
+            <div class="display-title text-gradient">行业深度研究Agent</div>
+            <p class="lead">由 AI 驱动的产业研究助手，结合结构化数据与生成式模型，提供市场洞察、竞争格局解读与趋势预测。</p>
+            <div class="cta">
+              <button class="btn primary lg" id="btn-start">开始AI分析</button>
+            </div>
+          </div>
+          <div class="home-right">
+            <svg class="home-logo-svg" viewBox="0 0 400 400" aria-hidden="true">
+              <defs>
+                <radialGradient id="g1" cx="50%" cy="40%" r="60%">
+                  <stop offset="0%" stop-color="#f97316"/>
+                  <stop offset="60%" stop-color="#f97316" stop-opacity="0.4"/>
+                  <stop offset="100%" stop-color="#f97316" stop-opacity="0"/>
+                </radialGradient>
+                <radialGradient id="g2" cx="30%" cy="70%" r="50%">
+                  <stop offset="0%" stop-color="#06b6d4"/>
+                  <stop offset="60%" stop-color="#06b6d4" stop-opacity="0.35"/>
+                  <stop offset="100%" stop-color="#06b6d4" stop-opacity="0"/>
+                </radialGradient>
+              </defs>
+              <circle cx="200" cy="160" r="140" fill="url(#g1)"/>
+              <circle cx="160" cy="240" r="120" fill="url(#g2)"/>
+              <path d="M60 300 L140 220 L200 260 L280 180 L340 210" fill="none" stroke="#ffffff" stroke-opacity="0.28" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="140" cy="220" r="10" fill="#f97316"/>
+              <circle cx="200" cy="260" r="10" fill="#f97316"/>
+              <circle cx="280" cy="180" r="10" fill="#f97316"/>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-choose" class="view">
+        <div class="topbar">
+          <div class="left">
+            <a href="#home" class="link">返回</a>
+          </div>
+          <div class="actions"><a href="index.html#home" class="link">回到主页</a></div>
+        </div>
+        <div class="full">
+          <div class="choose-content">
+            <div class="page-title">选择您的行业</div>
+            <div class="page-sub">请选择您想要分析的行业领域</div>
+            <div class="choose-wrap"><div class="choose-grid" id="choose-grid"></div></div>
+          </div>
+          <div class="home-right">
+            <svg class="home-logo-svg" viewBox="0 0 400 400" aria-hidden="true">
+              <defs>
+                <radialGradient id="g1c3" cx="50%" cy="40%" r="60%">
+                  <stop offset="0%" stop-color="#f97316"/>
+                  <stop offset="60%" stop-color="#f97316" stop-opacity="0.4"/>
+                  <stop offset="100%" stop-color="#f97316" stop-opacity="0"/>
+                </radialGradient>
+                <radialGradient id="g2c3" cx="30%" cy="70%" r="50%">
+                  <stop offset="0%" stop-color="#06b6d4"/>
+                  <stop offset="60%" stop-color="#06b6d4" stop-opacity="0.35"/>
+                  <stop offset="100%" stop-color="#06b6d4" stop-opacity="0"/>
+                </radialGradient>
+              </defs>
+              <circle cx="200" cy="160" r="140" fill="url(#g1c3)"/>
+              <circle cx="160" cy="240" r="120" fill="url(#g2c3)"/>
+              <path d="M60 300 L140 220 L200 260 L280 180 L340 210" fill="none" stroke="#ffffff" stroke-opacity="0.28" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-ask" class="view">
+        <div class="topbar">
+          <div class="left">
+            <a href="#choose" class="link">返回</a>
+          </div>
+          <div class="actions"><a href="index.html#home" class="link">回到主页</a></div>
+        </div>
+        <div class="full" style="display:grid;place-items:center;min-height:calc(100vh - 120px);">
+          <div class="ask-wrap">
+            <div class="ask-title" id="ask-title"></div>
+            <div class="ask-input">
+              <input id="ask-input" placeholder="在此输入您的问题..." />
+              <button class="ask-send" id="ask-send">➤</button>
+            </div>
+            <div class="suggests" id="ask-suggests"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-loading" class="view loading">
+        <div class="topbar">
+          <div class="left">
+            <a href="#ask" class="link">取消</a>
+          </div>
+          <div class="actions"><a href="index.html#home" class="link">回到主页</a></div>
+        </div>
+        <div class="full" style="display:grid;place-items:center;min-height:60vh;">
+          <canvas id="particles" class="particles"></canvas>
+          <div class="loading-text" id="loading-text">报告生成中</div>
+        </div>
+      </section>
+
+      <section id="view-ready" class="view">
+        <div class="topbar">
+          <div class="left">
+            <a href="#ask" class="link">返回</a>
+          </div>
+          <div class="actions"><a href="index.html#home" class="link">回到主页</a></div>
+        </div>
+        <div class="full" style="position:relative;display:grid;place-items:center;min-height:60vh;">
+          <canvas id="orbit" class="particles particles-orbit"></canvas>
+          <button class="btn primary xl" id="btn-ready-view">查看报告</button>
+        </div>
+      </section>
+
+      
+    </main>
+
+    <script>
+      const API_BASE = 'http://localhost:8081';
+      async function submitQuestion(industry, question) {
+        const r = await fetch(`${API_BASE}/api/report`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ industry, question })
+        });
+        if (!r.ok) throw new Error('server error');
+        return await r.json();
+      }
+      function subscribeProgress(id, onPhase) {
+        const es = new EventSource(`${API_BASE}/api/report/${id}/stream`);
+        es.onmessage = (e) => { try { const d = JSON.parse(e.data); onPhase(d.phase); } catch {} };
+        es.onerror = () => es.close();
+        return es;
+      }
+      async function fetchReport(id) {
+        const r = await fetch(`${API_BASE}/api/report/${id}`);
+        if (!r.ok) throw new Error('server error');
+        return await r.json();
+      }
+      const DATA = [
+        { company: 'AlphaPay', sector: '支付', stage: 'Series A', funding: 35, growth: 18.2, desc: '跨境支付与清算解决方案' },
+        { company: 'LedgerX', sector: '区块链', stage: 'Seed', funding: 8, growth: 26.4, desc: '链上资产托管与审计' },
+        { company: 'RiskMind', sector: '风控', stage: 'Series B', funding: 60, growth: 14.1, desc: '交易欺诈检测与信用评分' },
+        { company: 'Quantify', sector: '资产管理', stage: 'Series A', funding: 22, growth: 12.8, desc: '量化投研与组合优化' },
+        { company: 'NeoBank', sector: '数字银行', stage: 'Series C', funding: 120, growth: 21.0, desc: '面向零售与小微的数字银行' },
+        { company: 'InsureAI', sector: '保险科技', stage: 'Series A', funding: 28, growth: 16.7, desc: '智能核保与理赔自动化' },
+        { company: 'EV Capital', sector: '新能源汽车', stage: 'Seed', funding: 12, growth: 19.3, desc: '电动汽车金融及补贴管理' }
+      ];
+
+      const INDUSTRIES = [
+        { name: '新能源汽车', tags: ['电池', '补贴', '融资'] },
+        { name: '人工智能', tags: ['模型', '应用', '算力'] },
+        { name: '医疗健康', tags: ['器械', '药品', '医保'] },
+        { name: '智能制造', tags: ['自动化', '机器人', '工业软件'] },
+        { name: '航空航天', tags: ['火箭', '卫星', '通信'] },
+        { name: '电子商务', tags: ['平台', '供应链', '支付'] },
+        { name: '房地产', tags: ['开发', '租赁', '物业'] },
+        { name: '金融服务', tags: ['银行', '证券', '保险'] },
+        { name: '物流运输', tags: ['仓储', '干线', '末端'] }
+      ];
+
+      const els = {
+        sectorSelect: document.getElementById('sector-select'),
+        searchInput: document.getElementById('search-input'),
+        tbody: document.querySelector('#data-table tbody'),
+        mSectors: document.getElementById('m-sectors'),
+        mSamples: document.getElementById('m-samples'),
+        mGrowth: document.getElementById('m-growth'),
+        btnStart: document.getElementById('btn-start'),
+        viewHome: document.getElementById('view-home'),
+        viewChoose: document.getElementById('view-choose'),
+        viewAsk: document.getElementById('view-ask'),
+        viewLoading: document.getElementById('view-loading'),
+        viewReady: document.getElementById('view-ready'),
+        chooseGrid: document.getElementById('choose-grid'),
+        askTitle: document.getElementById('ask-title'),
+        askInput: document.getElementById('ask-input'),
+        askSend: document.getElementById('ask-send'),
+        askSuggests: document.getElementById('ask-suggests'),
+        loadingText: document.getElementById('loading-text'),
+        particles: document.getElementById('particles'),
+        orbit: document.getElementById('orbit'),
+        btnReadyView: document.getElementById('btn-ready-view'),
+      };
+
+      const STATE = { activeTag: '', route: 'home', industry: '', question: '' };
+
+      function initMetrics() {
+        const sectors = Array.from(new Set(DATA.map(d => d.sector)));
+        const avgGrowth = DATA.reduce((acc, d) => acc + d.growth, 0) / DATA.length;
+        els.mSectors.textContent = sectors.length.toString();
+        els.mSamples.textContent = DATA.length.toString();
+        els.mGrowth.textContent = avgGrowth.toFixed(1) + '%';
+      }
+
+      function initSelect() {
+        const sectors = Array.from(new Set(DATA.map(d => d.sector)));
+        sectors.forEach(s => {
+          const opt = document.createElement('option');
+          opt.value = s; opt.textContent = s; els.sectorSelect.appendChild(opt);
+        });
+      }
+
+      function renderTable() {
+        const q = els.searchInput.value.trim().toLowerCase();
+        const sector = els.sectorSelect.value;
+        const filtered = DATA.filter(d => {
+          const hitSector = !sector || d.sector === sector;
+          const hitText = !q || (d.company.toLowerCase().includes(q) || d.desc.toLowerCase().includes(q));
+          return hitSector && hitText;
+        });
+        els.tbody.innerHTML = '';
+        for (const d of filtered) {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${d.company}</td>
+            <td>${d.sector}</td>
+            <td>${d.stage}</td>
+            <td>${d.funding}</td>
+            <td>${d.growth}</td>
+            <td>${d.desc}</td>
+          `;
+          els.tbody.appendChild(tr);
+        }
+      }
+
+      function renderChoose() {
+        els.chooseGrid.innerHTML = '';
+        for (const i of INDUSTRIES) {
+          const card = document.createElement('div');
+          card.className = 'choose-card';
+          card.innerHTML = `<div class="choose-name text-gradient">${i.name}</div>`;
+          card.addEventListener('click', () => { STATE.industry = i.name; navigate('ask'); });
+          els.chooseGrid.appendChild(card);
+        }
+      }
+
+      function renderAsk() {
+        els.askTitle.textContent = `您选择的行业：${STATE.industry}`;
+        els.askSuggests.innerHTML = '';
+        const base = [
+          `简要分析${STATE.industry}在全国的竞争格局是什么？`,
+          `${STATE.industry}市场的主要竞争特点是什么？`,
+          `电池技术发展对${STATE.industry}产业的影响？`
+        ];
+        for (const s of base) {
+          const b = document.createElement('button');
+          b.className = 'chip'; b.textContent = s;
+          b.addEventListener('click', () => { els.askInput.value = s; });
+          els.askSuggests.appendChild(b);
+        }
+      }
+
+      function generateReport() {
+        STATE.question = els.askInput.value.trim();
+        navigate('loading');
+        (async () => {
+          const res = await submitQuestion(STATE.industry, STATE.question);
+          if (res && res.id) {
+            let currentPhase = 'analyzing';
+            let lastPhaseAt = Date.now();
+            const es = subscribeProgress(res.id, (phase) => {
+              if (!els.loadingText) return;
+              els.loadingText.style.opacity = 0;
+              setTimeout(() => { els.loadingText.textContent =
+                phase === 'analyzing' ? '正在分析您的问题' :
+                phase === 'fetching' ? '正在检索相关数据' :
+                phase === 'generating' ? '报告生成中' : '报告已生成';
+                els.loadingText.style.opacity = 1; }, 120);
+              currentPhase = phase; lastPhaseAt = Date.now();
+              if (phase === 'generating' || phase === 'done') { if (els.btnLoadingView) els.btnLoadingView.style.display = 'inline-block'; }
+            });
+            // 本地兜底进度：若服务端事件未及时到达，按既定节奏推进文案
+            const fallback = () => {
+              const now = Date.now();
+              if (!els.loadingText) return;
+              if (now - lastPhaseAt > 2500 && currentPhase === 'analyzing') {
+                els.loadingText.textContent = '正在检索相关数据';
+                lastPhaseAt = now; currentPhase = 'fetching';
+              } else if (now - lastPhaseAt > 2500 && currentPhase === 'fetching') {
+                els.loadingText.textContent = '报告生成中';
+                lastPhaseAt = now; currentPhase = 'generating';
+                if (els.btnLoadingView) els.btnLoadingView.style.display = 'inline-block';
+              }
+              setTimeout(fallback, 800);
+            };
+            fallback();
+            const poll = async () => {
+              try {
+                const report = await fetchReport(res.id);
+                sessionStorage.setItem('report_payload', JSON.stringify(report));
+                es && es.close(); navigate('ready');
+              } catch (e) { setTimeout(poll, 1200); }
+            };
+            poll();
+            // 安全兜底：10s 仍未成功则给出占位报告避免卡住
+            setTimeout(() => {
+              try { if (!sessionStorage.getItem('report_payload')) {
+                const payload = {
+                  title: `${STATE.industry}行业分析报告`,
+                  date: new Date().toISOString(),
+                  overview: '占位报告：当前服务端未返回结果',
+                  market: '占位内容', trends: '占位内容', risks: '占位内容'
+                };
+                sessionStorage.setItem('report_payload', JSON.stringify(payload));
+                es && es.close(); navigate('ready');
+              }} catch {}
+            }, 10000);
+          } else {
+            const payload = {
+              industry: STATE.industry,
+              question: STATE.question,
+              date: new Date().toISOString(),
+              overview: '报告内容将在此处展示… 您可以在这里替换为实际的数据与分析结果。',
+              market: '市场分析内容将在此处展示…',
+              trends: '发展趋势分析将在此处展示…',
+              risks: '风险与机会分析将在此处展示…'
+            };
+            sessionStorage.setItem('report_payload', JSON.stringify(payload));
+            const stages = ['正在分析您的问题', '正在检索相关数据', '报告生成中'];
+            const delays = [2500, 2000, 2000];
+            let idx = 0;
+            function next() {
+              if (!els.loadingText) return;
+              els.loadingText.style.opacity = 0;
+              setTimeout(() => {
+                els.loadingText.textContent = stages[idx];
+                els.loadingText.style.opacity = 1;
+              }, 120);
+              const wait = delays[idx] || 1800;
+              idx++;
+              if (idx < stages.length) {
+                setTimeout(next, wait);
+              } else {
+                setTimeout(() => navigate('ready'), 1600);
+              }
+            }
+            next();
+          }
+        })();
+      }
+
+      function downloadReport() {
+        const text = `标题: ${els.reportTitle.textContent}\n日期: ${els.reportDate.textContent}\n\n概述: ${els.reportOverview.textContent}\n\n市场分析: ${els.reportMarket.textContent}\n\n发展趋势: ${els.reportTrends.textContent}\n\n风险与机会: ${els.reportRisks.textContent}`;
+        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = `${STATE.industry}-行业分析报告.txt`; a.click();
+        URL.revokeObjectURL(url);
+      }
+
+      function showView(name) {
+        const map = { home: els.viewHome, choose: els.viewChoose, ask: els.viewAsk, loading: els.viewLoading, ready: els.viewReady };
+        const next = map[name];
+        const current = document.querySelector('.view.active');
+        if (current && current !== next) {
+          current.classList.remove('active');
+          current.classList.add('fade-out');
+          setTimeout(() => { current.classList.remove('fade-out'); current.style.display = 'none'; }, 250);
+        }
+        next.style.display = 'block';
+        requestAnimationFrame(() => next.classList.add('active'));
+        window.scrollTo(0, 0);
+      }
+
+      function navigate(name) {
+        STATE.route = name;
+        location.hash = name;
+        route();
+      }
+
+      function route() {
+        const r = (location.hash || '#home').slice(1);
+        STATE.route = r;
+        showView(r);
+        if (r === 'choose') renderChoose();
+        if (r === 'ask') renderAsk();
+        if (r === 'loading') { if (els.loadingText) { els.loadingText.textContent = '正在分析您的问题'; els.loadingText.style.opacity = 1; } startParticles(); } else { stopParticles(); }
+        if (r === 'ready') { startReadyRandom(); } else { stopReadyRandom(); }
+      }
+
+      function renderChips() {}
+
+      function scrollToId(id) {
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      function init() {
+        if (els.btnStart) els.btnStart.addEventListener('click', () => navigate('choose'));
+        if (els.askSend) els.askSend.addEventListener('click', generateReport);
+        if (els.btnReadyView) els.btnReadyView.addEventListener('click', () => { window.location.href = 'report.html'; });
+        const logoEl = document.getElementById('home-logo');
+        if (logoEl && logoEl.style.display === 'none') {
+          const fb = document.getElementById('home-logo-fallback');
+          if (fb) fb.style.display = 'block';
+        }
+        route();
+      }
+
+      let particlesRAF = 0, particlesData = null;
+      function startParticles() {
+        if (!els.particles) return;
+        const c = els.particles;
+        c.width = Math.floor(c.offsetWidth);
+        c.height = Math.floor(c.offsetHeight);
+        const ctx = c.getContext('2d');
+        const W = c.width, H = c.height; const cx = W/2, cy = H/2; const R = Math.min(W,H)/2 - 8;
+        const N = 600;
+        particlesData = Array.from({length:N}, () => {
+          const ang = Math.random()*Math.PI*2;
+          const r = Math.random()*R*0.95;
+          const speed = 0.4 + Math.random()*0.7;
+          return { x: cx + Math.cos(ang)*r, y: cy + Math.sin(ang)*r, vx: Math.cos(ang+Math.random())*speed*0.34, vy: Math.sin(ang+Math.random())*speed*0.34, size: 0.8 + Math.random()*1.0 };
+        });
+        function tick() {
+          ctx.clearRect(0,0,W,H);
+          ctx.globalAlpha = 1;
+          for (const p of particlesData) {
+            // random drift
+            p.vx += (Math.random()-0.5)*0.05;
+            p.vy += (Math.random()-0.5)*0.05;
+            p.x += p.vx; p.y += p.vy;
+            const dx = p.x - cx, dy = p.y - cy; const d = Math.hypot(dx,dy);
+            if (d > R) { // bounce back towards center
+              const nx = dx/d, ny = dy/d;
+              p.vx -= nx*0.7; p.vy -= ny*0.7;
+              p.x = cx + nx*(R-2);
+              p.y = cy + ny*(R-2);
+            }
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+            const hue = 18 + Math.random()*40; // lean warm
+            const sat = 80 + Math.random()*10;
+            const light = 60 + Math.random()*5;
+            ctx.fillStyle = `hsla(${hue}, ${sat}%, ${light}%, 0.85)`;
+            ctx.fill();
+          }
+          particlesRAF = requestAnimationFrame(tick);
+        }
+        cancelAnimationFrame(particlesRAF);
+        particlesRAF = requestAnimationFrame(tick);
+      }
+      function stopParticles(){ if (particlesRAF) cancelAnimationFrame(particlesRAF); }
+
+      let orbitRAF = 0, orbitData = null;
+      function startOrbit() {
+        if (!els.orbit) return;
+        const c = els.orbit;
+        c.width = Math.floor(c.offsetWidth);
+        c.height = Math.floor(c.offsetHeight);
+        const ctx = c.getContext('2d');
+        const W = c.width, H = c.height; const cx = W/2, cy = H/2; const R = Math.min(W,H)/2 - 8;
+        const rings = 20;
+        const ringR = Array.from({length:rings}, (_,k)=> R*(0.05 + 0.95*(k/(rings-1))));
+        const baseSpeed = 0.0028;
+        const srcCount = Math.max(particlesData ? particlesData.length : 0, rings*50);
+        const src = Array.from({length: srcCount}, (__,i) => {
+          if (particlesData && i < particlesData.length) return particlesData[i];
+          const ang = Math.random()*Math.PI*2; const r = Math.random()*R;
+          return { x: cx + Math.cos(ang)*r, y: cy + Math.sin(ang)*r };
+        });
+        const data = [];
+        for (let i=0;i<src.length;i++) {
+          const s = src[i];
+          const dx = s.x - cx, dy = s.y - cy; const ang = Math.atan2(dy, dx);
+          const d = Math.hypot(dx, dy);
+          const rk = i % rings;
+          const rTarget = ringR[rk];
+          const speed = baseSpeed * (0.5 + (rk/(rings))*0.9) * (0.25 + Math.random()*1.75) * (Math.random()<0.5?1:-1);
+          const size = 0.8 + Math.random()*1.0;
+          const wobble = 2 + Math.random()*3;
+          const phase = Math.random()*Math.PI*2;
+          data.push({ x: s.x, y: s.y, ang, r: d, rTarget, speed, size, t: 0, wobble, phase });
+        }
+        orbitData = data;
+        function tick() {
+          ctx.clearRect(0,0,W,H);
+          for (const p of orbitData) {
+            if (p.t < 1) {
+              p.t += 0.015;
+              const ease = 1 - Math.pow(1 - p.t, 3);
+              p.r = p.r + (p.rTarget - p.r) * ease * 0.05;
+              p.ang += p.speed * 0.4;
+              p.x = cx + Math.cos(p.ang)*p.r;
+              p.y = cy + Math.sin(p.ang)*p.r;
+            } else {
+              p.ang += p.speed;
+              p.phase += 0.012;
+              const rw = p.rTarget + Math.sin(p.phase)*p.wobble;
+              p.x = cx + Math.cos(p.ang)*rw;
+              p.y = cy + Math.sin(p.ang)*rw;
+            }
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+            ctx.fillStyle = 'hsla(22, 85%, 62%, 0.85)';
+            ctx.fill();
+          }
+          orbitRAF = requestAnimationFrame(tick);
+        }
+        cancelAnimationFrame(orbitRAF);
+        orbitRAF = requestAnimationFrame(tick);
+      }
+      function stopOrbit(){ if (orbitRAF) cancelAnimationFrame(orbitRAF); }
+
+      let readyRAF = 0, readyData = null, readyLast = 0;
+      function startReadyRandom() {
+        if (!els.orbit) return;
+        const c = els.orbit;
+        c.width = Math.floor(c.offsetWidth);
+        c.height = Math.floor(c.offsetHeight);
+        const ctx = c.getContext('2d');
+        const W = c.width, H = c.height; const cx = W/2, cy = H/2; const R = Math.min(W,H)/2 - 8;
+        const N = 700;
+        if (particlesData && particlesData.length) {
+          readyData = particlesData.slice(0, N).map(p => ({ x: p.x, y: p.y, vx: (Math.random()-0.5)*0.4, vy: (Math.random()-0.5)*0.4, size: p.size || (0.8 + Math.random()*1.0) }));
+        } else {
+          readyData = Array.from({length:N}, () => {
+            const ang = Math.random()*Math.PI*2;
+            const r = Math.random()*R*0.95;
+            const speed = 0.4 + Math.random()*0.7;
+            return { x: cx + Math.cos(ang)*r, y: cy + Math.sin(ang)*r, vx: Math.cos(ang+Math.random())*speed*0.34, vy: Math.sin(ang+Math.random())*speed*0.34, size: 0.8 + Math.random()*1.0 };
+          });
+        }
+        function tick(ts) {
+          if (!readyLast) readyLast = ts;
+          const dt = Math.min( (ts - readyLast) / 16.7, 3); // ~60fps baseline, clamp
+          readyLast = ts;
+          ctx.clearRect(0,0,W,H);
+          for (const p of readyData) {
+            p.vx += (Math.random()-0.5)*0.04 * dt;
+            p.vy += (Math.random()-0.5)*0.04 * dt;
+            p.x += p.vx * dt; p.y += p.vy * dt;
+            const dx = p.x - cx, dy = p.y - cy; const d = Math.hypot(dx,dy);
+            if (d > R) {
+              const nx = dx/d, ny = dy/d;
+              p.vx -= nx*0.6 * dt; p.vy -= ny*0.6 * dt;
+              p.x = cx + nx*(R-2);
+              p.y = cy + ny*(R-2);
+            }
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+            const hue = 18 + Math.random()*40;
+            const sat = 80 + Math.random()*10;
+            const light = 60 + Math.random()*5;
+            ctx.fillStyle = `hsla(${hue}, ${sat}%, ${light}%, 0.85)`;
+            ctx.fill();
+          }
+          readyRAF = requestAnimationFrame(tick);
+        }
+        cancelAnimationFrame(readyRAF);
+        readyLast = 0;
+        readyRAF = requestAnimationFrame(tick);
+      }
+      function stopReadyRandom(){ if (readyRAF) cancelAnimationFrame(readyRAF); }
+
+      document.addEventListener('DOMContentLoaded', init);
+    </script>
+  </body>
+  </html>
