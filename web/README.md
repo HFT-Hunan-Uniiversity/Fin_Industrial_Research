@@ -1,4 +1,4 @@
-# FinTech Industry Research Frontend + Backend
+# 行业深度分析系统 - 前端与后端
 
 ## 本地运行
 
