@@ -12,15 +12,23 @@
 Industry_analysis/
 ├── agent_analysis_project/    # 后端智能分析系统
 │   ├── config/               # 配置文件
+│   │   ├── project.yaml     # 项目配置
+│   │   ├── agent.yaml       # 智能体配置
+│   │   └── prompt.yaml      # 提示词配置
 │   ├── src/                  # 源代码
-│   ├── data/                 # 数据文件
-│   ├── output/               # 输出结果
-│   ├── docs/                 # 文档
-│   └── api_server.py         # API服务器
+│   │   ├── agents/          # 智能体实现
+│   │   ├── tools/           # 工具实现
+│   │   └── utils/           # 工具函数
+│   ├── data/                # 数据文件
+│   ├── output/              # 输出结果
+│   ├── logs/                # 日志文件
+│   ├── requirements.txt     # 依赖包
+│   ├── .env                 # 环境变量
+│   └── api_server.py        # API服务器
 ├── web/                      # 前端展示界面
-│   ├── index.html            # 主页面
-│   ├── report.html           # 报告页面
-│   └── server/               # Node.js后端服务
+│   ├── index.html           # 主页面
+│   ├── report.html          # 报告页面
+│   └── server/              # Node.js后端服务
 └── output/                   # 分析结果输出
 ```
 
@@ -60,8 +68,11 @@ pip install -r requirements.txt
 
 3. 配置环境变量
 ```bash
+# 复制环境变量模板
 cp .env.template .env
+
 # 编辑.env文件，设置API密钥
+nano .env
 ```
 
 ### 前端安装
@@ -74,6 +85,38 @@ cd web
 2. 启动Node.js服务器
 ```bash
 node server/server.js
+```
+
+### Docker部署
+
+1. 配置环境变量
+```bash
+# 复制环境变量模板
+cp .env.template .env
+
+# 编辑.env文件，设置API密钥
+nano .env
+```
+
+2. 使用部署脚本
+```bash
+# Linux/Mac
+chmod +x deploy-docker.sh
+./deploy-docker.sh
+
+# Windows
+deploy-docker.bat
+```
+
+### 一键安装脚本
+
+```bash
+# Linux/Mac
+chmod +x install.sh
+./install.sh
+
+# Windows
+install.bat
 ```
 
 ## 使用方法
